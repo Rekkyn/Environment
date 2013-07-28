@@ -10,7 +10,7 @@ public class Game extends StateBasedGame {
     static AppGameContainer appgc;
     public static final String NAME = "Environment";
     public static final int MENU = 0;
-    public static final int PLAY = 1;
+    public static final int WORLD = 1;
     public static int width = 800;
     public static int height = 600;
 
@@ -29,5 +29,8 @@ public class Game extends StateBasedGame {
     }
 
     @Override
-    public void initStatesList(GameContainer container) throws SlickException {}
+    public void initStatesList(GameContainer container) throws SlickException {
+        addState(new Menu(MENU));
+        addState(new World(WORLD));
+    }
 }
