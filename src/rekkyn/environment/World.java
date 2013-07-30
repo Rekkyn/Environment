@@ -15,15 +15,20 @@ public class World extends BasicGameState {
     public static List<Entity> entities = new ArrayList<Entity>();
     float accumulator = 0.0F;
     static float partialTicks;
+    public static final float timesetp = 50/3; // 1/60 second
+    //public static final float timesetp = 500;
     
     public World(int state) {}
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
-        for (int lmnop = 0; lmnop < 2; lmnop++) {
-        Entity e = new Entity(100 + lmnop, 100 + lmnop * 20);
+        Entity e = new Entity(100, 100);
+        e.playerControlled = true;
+        
+        Entity e2 = new Entity(100, 150);
+
         add(e);
-        }
+        add(e2);
     }
     
     @Override
@@ -42,18 +47,26 @@ public class World extends BasicGameState {
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         accumulator += delta;
 
-        while ( accumulator >= 50/3 )
+        while ( accumulator >= timesetp )
         {
              tick(container, game, delta);
-             accumulator -= 50/3;
+             accumulator -= timesetp;
         }
         
-        partialTicks = accumulator / (50/3);
+        partialTicks = accumulator / timesetp;
     }
     
     public void tick(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         for (int i = 0; i < entities.size(); i++) {
             Entity e = entities.get(i);
+            
+                for (int j = 0; j < entities.size(); j++) {
+                    Entity e2 = entities.get(j);
+                    if (e2 != e && e.intersects(e2)) {
+                        e.onHit(e2);
+                        Collision.doCollision(e, e2);
+                    }
+                }
             
             e.update(container, game, delta);
             
