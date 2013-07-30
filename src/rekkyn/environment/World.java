@@ -29,7 +29,7 @@ public class World extends BasicGameState {
         
         Entity e2 = new Entity(100, 150);
         
-        Entity wall = new Wall(200, 200);
+        Entity wall = new Wall(200, 200, 100);
 
         add(e);
         add(e2);

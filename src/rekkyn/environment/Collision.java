@@ -5,6 +5,9 @@ import org.newdawn.slick.geom.Vector2f;
 public class Collision {
     
     public static void doCollision(Entity A, Entity B) {
+        
+        if (A.invMass + B.invMass == 0) return;
+        
         // Calculate relative velocity
         Vector2f Bvelocity = B.velocity.copy();
         Vector2f rv = Bvelocity.sub(A.velocity);
@@ -78,5 +81,4 @@ public class Collision {
         A.y -= correctionA.y;
         B.y += correctionB.y;
     }
-    
 }
