@@ -24,6 +24,7 @@ public class Entity {
     public boolean onEdgeX;
     public boolean onEdgeY;
     public int size;
+    public float invMass;
     float edgeLength;
     public float x1;
     public float y1;
@@ -32,11 +33,13 @@ public class Entity {
     public Color col;
     Random rand = new Random();
     public boolean playerControlled;
-    
+    public float restitution = 0.8F;
+        
     public Entity(float x, float y) {
         this.x = x;
         this.y = y;
-        size = 200;
+        size = 500;
+        invMass = 1F / size;
         col = new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
         velocity = new Vector2f(0, 0);
         prevVelocity = new Vector2f(0, 0);
@@ -48,7 +51,7 @@ public class Entity {
         g.translate(World.partialTicks * (x - prevX), World.partialTicks * (y - prevY));
         g.fillRect(x - edgeLength / 2, y - edgeLength / 2, edgeLength, edgeLength);
         g.setColor(Color.black);
-        //g.drawLine(x, y, x+velocity.x * 10, y+velocity.y * 10);
+        g.drawLine(x, y, x + velocity.x * 10, y + velocity.y * 10);
         g.popTransform();
     }
     
@@ -59,6 +62,8 @@ public class Entity {
         
         prevVelocity.set(velocity);
         
+        invMass = 1F / size;
+                        
         edgeLength = (float) Math.sqrt(size);
         x1 = x - edgeLength / 2;
         x2 = x + edgeLength / 2;
@@ -75,7 +80,7 @@ public class Entity {
         onEdgeY = false;
         if (x1 < 0) {
             x = edgeLength / 2;
-             velocity.x = -velocity.x * 0.4F;
+            velocity.x = -velocity.x * 0.4F;
             onEdgeX = true;
         }
         if (y1 < 0) {
@@ -93,55 +98,7 @@ public class Entity {
             velocity.y = -velocity.y * 0.4F;
             onEdgeY = true;
         }
-        
-        for (int i = 0; i < World.getEntities().size(); i++) {
-            Entity e = World.getEntities().get(i);
-            if (e != this && intersects(e) && e.isCollidable()) {
-                onHit(e);
-                float xOverlap = 0;
-                float yOverlap = 0;
-                if (e.x2 > x1 && x2 > e.x2) {
-                    xOverlap = e.x2 - x1;
-                }
-                if (x2 > e.x1 && x1 < e.x1) {
-                    xOverlap = e.x1 - x2;
-                }
-                if (x1 == e.x1) {
-                    xOverlap = edgeLength;
-                }
                 
-                if (e.y2 > y1 && y2 > e.y2) {
-                    yOverlap = e.y2 - y1;
-                }
-                if (y2 > e.y1 && y1 < e.y1) {
-                    yOverlap = e.y1 - y2;
-                }
-                if (y1 == e.y1) {
-                    yOverlap = edgeLength;
-                }
-                
-                if (xOverlap != 0 && yOverlap != 0) {
-                    if (Math.abs(xOverlap) < Math.abs(yOverlap)) {
-                        x += xOverlap + xOverlap / Math.abs(xOverlap) * 0.1 + -prevVelocity.x * 0.1;
-                        if (e.onEdgeX) {
-                            velocity.x = -prevVelocity.x * 0.8F;
-                        } else {
-                            e.velocity.x = prevVelocity.x * 0.8F;
-                            velocity.x = e.prevVelocity.x * 0.8F;
-                        }
-                    } else {
-                        y += yOverlap + yOverlap / Math.abs(yOverlap) * 0.1 + -prevVelocity.y * 0.1;
-                        if (e.onEdgeY) {
-                            velocity.y = -prevVelocity.y * 0.8F;
-                        } else {
-                            e.velocity.y = prevVelocity.y * 0.8F;
-                            velocity.y = e.prevVelocity.y * 0.8F;
-                        }
-                    }
-                }
-            }
-        }
-        
         float speed = 0.2F;
         
         if (playerControlled) {
@@ -181,34 +138,8 @@ public class Entity {
     public void remove() {
         removed = true;
     }
-    
-    /*void doCollision(Entity e)
-    {
-    ÊÊ// Calculate relative velocity
-    ÊÊVector2f rv = e.velocity - A.velocity;
-    Ê
-    ÊÊ// Calculate relative velocity in terms of the normal direction
-    ÊÊfloat velAlongNormal = DotProduct( rv, normal )
-    Ê
-    ÊÊ// Do not resolve if velocities are separating
-    ÊÊif(velAlongNormal > 0)
-    ÊÊÊÊreturn;
-    Ê
-    ÊÊ// Calculate restitution
-    ÊÊfloat e = min( A.restitution, B.restitution)
-    Ê
-    ÊÊ// Calculate impulse scalar
-    ÊÊfloat j = -(1 + e) * velAlongNormal
-    ÊÊj /= 1 / A.mass + 1 / B.mass
-    Ê
-    ÊÊ// Apply impulse
-    ÊÊVec2 impulse = j * normal
-    ÊÊA.velocity -= 1 / A.mass * impulse
-    ÊÊB.velocity += 1 / B.mass * impulse
-    }*/
-    
-    public boolean intersects(Entity e) {
         
+    public boolean intersects(Entity e) {
         if (e.x1 > x2 || x1 > e.x2) return false;
         if (e.y1 > y2 || y1 > e.y2) return false;
         return true;
