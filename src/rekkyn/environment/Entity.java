@@ -24,6 +24,7 @@ public class Entity {
     public boolean onEdgeX;
     public boolean onEdgeY;
     public int size;
+    public float invMass;
     float edgeLength;
     public float x1;
     public float y1;
@@ -32,11 +33,13 @@ public class Entity {
     public Color col;
     Random rand = new Random();
     public boolean playerControlled;
-    
+    public float restitution = 0.8F;
+        
     public Entity(float x, float y) {
         this.x = x;
         this.y = y;
         size = 500;
+        invMass = 1F / size;
         col = new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
         velocity = new Vector2f(0, 0);
         prevVelocity = new Vector2f(0, 0);
@@ -45,7 +48,7 @@ public class Entity {
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         g.setColor(col);
         g.pushTransform();
-        //g.translate(World.partialTicks * (x - prevX), World.partialTicks * (y - prevY));
+        g.translate(World.partialTicks * (x - prevX), World.partialTicks * (y - prevY));
         g.fillRect(x - edgeLength / 2, y - edgeLength / 2, edgeLength, edgeLength);
         g.setColor(Color.black);
         g.drawLine(x, y, x + velocity.x * 10, y + velocity.y * 10);
@@ -59,6 +62,8 @@ public class Entity {
         
         prevVelocity.set(velocity);
         
+        invMass = 1F / size;
+                        
         edgeLength = (float) Math.sqrt(size);
         x1 = x - edgeLength / 2;
         x2 = x + edgeLength / 2;

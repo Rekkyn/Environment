@@ -9,6 +9,8 @@ public class Collision {
         Vector2f Bvelocity = B.velocity.copy();
         Vector2f rv = Bvelocity.sub(A.velocity);
         
+        float penetration = 0;
+                
         // Calculate overlap on x axis
         float xOverlap = A.edgeLength / 2 + B.edgeLength / 2 - Math.abs(B.x - A.x);
         
@@ -30,6 +32,7 @@ public class Collision {
                     } else {
                         normal.set(1, 0);
                     }
+                    penetration = xOverlap;
                 } else {
                     // Point toward B knowing that n points from A to B
                     if (B.y - A.y < 0) {
@@ -37,6 +40,7 @@ public class Collision {
                     } else {
                         normal.set(0, 1);
                     }
+                    penetration = yOverlap;
                 }
             }
         }
@@ -50,19 +54,29 @@ public class Collision {
         }
         
         // Calculate restitution
-        float restitution = 0.8F;
+        float restitution = Math.min(A.restitution, B.restitution);
         
         // Calculate impulse scalar
         float j = -(1F + restitution) * velAlongNormal;
-        j /= 1F / A.size + 1F / B.size;
+        j /= A.invMass + B.invMass;
         
         // Apply impulse
-        Vector2f impulse = new Vector2f(normal.scale(j));
+        Vector2f normal2 = normal.copy();
+        Vector2f impulse = new Vector2f(normal2.scale(j));
         
         Vector2f impulse2 = impulse.copy();
         
-        A.velocity.sub(impulse.scale(1F / A.size));
-        B.velocity.add(impulse2.scale(1F / B.size)); //TODO: make forces jazz
+        A.velocity.sub(impulse.scale(A.invMass));
+        B.velocity.add(impulse2.scale(B.invMass)); //TODO: make forces jazz
+        
+        float percent = 0.2F; // usually 20% to 80%
+        float slop = 0.01F; // usually 0.01 to 0.1
+        Vector2f correctionA = normal.scale(Math.max( penetration - slop, 0.0f ) / (A.invMass + B.invMass) * percent);
+        Vector2f correctionB = correctionA.copy();
+        A.x -= correctionA.scale(A.invMass).x;
+        B.x += correctionB.scale(B.invMass).x;
+        A.y -= correctionA.y;
+        B.y += correctionB.y;
     }
     
 }

@@ -3,9 +3,11 @@ package rekkyn.environment;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -26,9 +28,12 @@ public class World extends BasicGameState {
         e.playerControlled = true;
         
         Entity e2 = new Entity(100, 150);
+        
+        Entity wall = new Wall(200, 200);
 
         add(e);
         add(e2);
+        add(wall);
     }
     
     @Override
@@ -57,6 +62,9 @@ public class World extends BasicGameState {
     }
     
     public void tick(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+        
+        Input input = container.getInput();
+
         for (int i = 0; i < entities.size(); i++) {
             Entity e = entities.get(i);
             
@@ -73,6 +81,14 @@ public class World extends BasicGameState {
             if (e.removed) {
                 entities.remove(i--);
             }
+        }
+        
+        if (input.isMousePressed(0)) {
+            int mouseX = Mouse.getX();
+            int mouseY = Game.height - Mouse.getY();
+      
+                Entity e = new Entity(mouseX, mouseY);
+                add(e);
         }
     }
     
