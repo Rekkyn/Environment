@@ -31,11 +31,12 @@ public class Entity {
     public float y2;
     public Color col;
     Random rand = new Random();
+    public boolean playerControlled;
     
     public Entity(float x, float y) {
         this.x = x;
         this.y = y;
-        size = 5;
+        size = 50;
         col = new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
         velocity = new Vector2f(0, 0);
         prevVelocity = new Vector2f(0, 0);
@@ -58,7 +59,7 @@ public class Entity {
         
         prevVelocity.set(velocity);
         
-        edgeLength = (float) Math.sqrt(size * 10);
+        edgeLength = (float) Math.sqrt(size);
         x1 = x - edgeLength / 2;
         x2 = x + edgeLength / 2;
         y1 = y - edgeLength / 2;
@@ -66,7 +67,7 @@ public class Entity {
         
         prevX = x;
         prevY = y;
-                
+        
         x += velocity.x;
         y += velocity.y;
         
@@ -102,26 +103,28 @@ public class Entity {
         }
         
         float speed = 0.2F;
-        Vector2f inputV = new Vector2f();
-        
-        input = container.getInput();
-        if (input.isKeyDown(Input.KEY_UP)) {
-            inputV.add(new Vector2f(0, -1));
+        if (playerControlled) {
+            Vector2f inputV = new Vector2f();
+            
+            input = container.getInput();
+            if (input.isKeyDown(Input.KEY_UP)) {
+                inputV.add(new Vector2f(0, -1));
+            }
+            if (input.isKeyDown(Input.KEY_DOWN)) {
+                inputV.add(new Vector2f(0, 1));
+            }
+            if (input.isKeyDown(Input.KEY_LEFT)) {
+                inputV.add(new Vector2f(-1, 0));
+            }
+            if (input.isKeyDown(Input.KEY_RIGHT)) {
+                inputV.add(new Vector2f(1, 0));
+            }
+            
+            inputV.normalise();
+            inputV.scale(speed);
+            
+            velocity.add(inputV);
         }
-        if (input.isKeyDown(Input.KEY_DOWN)) {
-            inputV.add(new Vector2f(0, 1));
-        }
-        if (input.isKeyDown(Input.KEY_LEFT)) {
-            inputV.add(new Vector2f(-1, 0));
-        }
-        if (input.isKeyDown(Input.KEY_RIGHT)) {
-            inputV.add(new Vector2f(1, 0));
-        }
-        
-        inputV.normalise();
-        inputV.scale(speed);
-        
-        velocity.add(inputV);
         
         velocity.scale(0.95F);
     }
@@ -153,7 +156,6 @@ public class Entity {
             // Calculate overlap on y axis
             float yOverlap = edgeLength / 2 + e.edgeLength / 2 - Math.abs(e.y - y);
             
-            
             // SAT test on y axis
             if (yOverlap > 0) {
                 // Find out which axis is axis of least penetration
@@ -175,11 +177,8 @@ public class Entity {
             }
         }
         
-        
-        
         // Calculate relative velocity in terms of the normal direction
         float velAlongNormal = rv.dot(normal);
-        
         
         // Do not resolve if velocities are separating
         if (velAlongNormal > 0) {
@@ -192,7 +191,6 @@ public class Entity {
         // Calculate impulse scalar
         float j = -(1 + restitution) * velAlongNormal;
         j /= 1F / size + 1F / e.size;
-        
         
         // Apply impulse
         Vector2f impulse = normal.scale(j);
