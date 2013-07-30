@@ -31,11 +31,12 @@ public class Entity {
     public float y2;
     public Color col;
     Random rand = new Random();
+    public boolean playerControlled;
     
     public Entity(float x, float y) {
         this.x = x;
         this.y = y;
-        size = 50;
+        size = 200;
         col = new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
         velocity = new Vector2f(0, 0);
         prevVelocity = new Vector2f(0, 0);
@@ -47,7 +48,7 @@ public class Entity {
         g.translate(World.partialTicks * (x - prevX), World.partialTicks * (y - prevY));
         g.fillRect(x - edgeLength / 2, y - edgeLength / 2, edgeLength, edgeLength);
         g.setColor(Color.black);
-        g.drawLine(x, y, x+velocity.x * 10, y+velocity.y * 10);
+        //g.drawLine(x, y, x+velocity.x * 10, y+velocity.y * 10);
         g.popTransform();
     }
     
@@ -142,27 +143,30 @@ public class Entity {
         }
         
         float speed = 0.2F;
-        Vector2f inputV = new Vector2f();
         
-        input = container.getInput();
-        if (input.isKeyDown(Input.KEY_UP)) {
-            inputV.add(new Vector2f(0, -1));
-        }
-        if (input.isKeyDown(Input.KEY_DOWN)) {
-            inputV.add(new Vector2f(0, 1));
-        }
-        if (input.isKeyDown(Input.KEY_LEFT)) {
-            inputV.add(new Vector2f(-1, 0));
-        }
-        if (input.isKeyDown(Input.KEY_RIGHT)) {
-            inputV.add(new Vector2f(1, 0));
+        if (playerControlled) {
+            Vector2f inputV = new Vector2f();
+            
+            input = container.getInput();
+            if (input.isKeyDown(Input.KEY_UP)) {
+                inputV.add(new Vector2f(0, -1));
+            }
+            if (input.isKeyDown(Input.KEY_DOWN)) {
+                inputV.add(new Vector2f(0, 1));
+            }
+            if (input.isKeyDown(Input.KEY_LEFT)) {
+                inputV.add(new Vector2f(-1, 0));
+            }
+            if (input.isKeyDown(Input.KEY_RIGHT)) {
+                inputV.add(new Vector2f(1, 0));
+            }
+            
+            inputV.normalise();
+            inputV.scale(speed);
+            
+            velocity.add(inputV);
         }
         
-        inputV.normalise();
-        inputV.scale(speed);
-        
-        velocity.add(inputV);        
-                
         velocity.scale(0.95F);
     }
     
@@ -204,6 +208,7 @@ public class Entity {
     }*/
     
     public boolean intersects(Entity e) {
+        
         if (e.x1 > x2 || x1 > e.x2) return false;
         if (e.y1 > y2 || y1 > e.y2) return false;
         return true;

@@ -20,10 +20,14 @@ public class World extends BasicGameState {
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
-        for (int lmnop = 0; lmnop < 2; lmnop++) {
-        Entity e = new Entity(100 + lmnop, 100 + lmnop * 20);
+        Entity e = new Entity(100, 100);
+        e.playerControlled = true;
+        
+        Entity e2 = new Entity(100, 150);
+
         add(e);
-        }
+        add(e2);
+        
     }
     
     @Override
@@ -49,6 +53,7 @@ public class World extends BasicGameState {
         }
         
         partialTicks = accumulator / (50/3);
+        System.out.println(accumulator);
     }
     
     public void tick(GameContainer container, StateBasedGame game, int delta) throws SlickException {
