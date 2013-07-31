@@ -27,6 +27,15 @@ public class Terrain {
         return energy[x][y];
     }
     
+    public static int changeEnergy(float x, float y, int amount) {
+        energy[(int) (x / 20)][(int) (y / 20)] += amount;
+        if (energy[(int) (x / 20)][(int) (y / 20)] < 0) {
+            amount += energy[(int) (x / 20)][(int) (y / 20)];
+            energy[(int) (x / 20)][(int) (y / 20)] = 0;
+        }
+        return amount;
+    }
+    
     public static void update(GameContainer container, StateBasedGame game, int delta) {
         if (container.getInput().isMousePressed(0)) {
             int mouseX = Mouse.getX() / 20;

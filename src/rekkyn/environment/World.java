@@ -2,6 +2,7 @@ package rekkyn.environment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Color;
@@ -20,6 +21,8 @@ public class World extends BasicGameState {
     public static long tickCount = 0;
     static float partialTicks;
     public static final float timesetp = 50 / 3; // 1/60 second
+    
+    public static Random rand = new Random();
     
     // public static final float timesetp = 500;
     
@@ -59,7 +62,7 @@ public class World extends BasicGameState {
         if (terrainMode) {
             for (int i = 0; i < Terrain.energy.length; i++) {
                 for (int j = 0; j < Terrain.energy[0].length; j++) {
-                    g.setColor(new Color(0F, 0F, 0F, Terrain.getEnergy(i, j) / 150F));
+                    g.setColor(new Color(0F, 0F, 0F, Terrain.getEnergy(i, j) / 200F));
                     g.fillRect(i * 20, j * 20, 20, 20);
                 }
             }

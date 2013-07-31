@@ -6,10 +6,9 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
-public class EntitySeed extends Entity {
+public class EntitySeed extends EntityLiving {
     
-    public int energy;
-    int time = 0;
+    int lifeTime = 0;
     int seedTime = 60;
     
     public EntitySeed(float x, float y, int energy) {
@@ -21,8 +20,8 @@ public class EntitySeed extends Entity {
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         super.update(container, game, delta);
-        time++;
-        if (time > seedTime && Math.abs(velocity.length()) < 0.1) {
+        lifeTime++;
+        if (lifeTime > seedTime && Math.abs(velocity.length()) < 0.1) {
             Plant plant = new Plant(x, y, energy);
             World.add(plant);
             remove();

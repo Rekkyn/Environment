@@ -24,8 +24,6 @@ public class Colour {
         java.awt.Color.RGBtoHSB(col.getRed(), col.getGreen(), col.getBlue(), hsb);
         hsb[1] = 0.4F * percent + 0.3F;
         hsb[2] = 0.5F * percent + 0.3F;
-        System.out.println(percent);
-        System.out.println(hsb[0] +" "+hsb[1]+" "+hsb[2]);
         return new Color(java.awt.Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]));
     }
 }
