@@ -35,7 +35,6 @@ public class EntityLiving extends Entity {
             }
         } else {
             deathTimer++;
-            System.out.println(deathTimer);
             if (deathTimer < 1800) {
             col = Colour.setColorByHealth((1800 - deathTimer) / 1800F, col);
             } else {

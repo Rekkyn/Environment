@@ -10,7 +10,7 @@ import org.newdawn.slick.state.StateBasedGame;
 public class Terrain {
     static int[][] energy = new int[Game.width / 20][Game.height / 20];
     
-    public static int differenceLevel = 10;
+    public static int differenceLevel = 20;
     public static int random = 10;
     
     static Random rand = new Random();
@@ -30,9 +30,10 @@ public class Terrain {
     public static int changeEnergy(float x, float y, int amount) {
         energy[(int) (x / 20)][(int) (y / 20)] += amount;
         if (energy[(int) (x / 20)][(int) (y / 20)] < 0) {
-            amount += energy[(int) (x / 20)][(int) (y / 20)];
+            amount -= energy[(int) (x / 20)][(int) (y / 20)];
             energy[(int) (x / 20)][(int) (y / 20)] = 0;
         }
+
         return amount;
     }
     

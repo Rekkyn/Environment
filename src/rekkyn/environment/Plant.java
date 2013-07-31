@@ -2,6 +2,7 @@ package rekkyn.environment;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class Plant extends EntityLiving {
@@ -11,7 +12,7 @@ public class Plant extends EntityLiving {
     
     public Plant(float x, float y, int energy) {
         super(x, y);
-        this.energy = energy;
+        this.energy = energy - 50;
         super.size = 50;
         rootX = x;
         rootY = y;
@@ -20,9 +21,11 @@ public class Plant extends EntityLiving {
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         super.update(container, game, delta);
-        
+        System.out.println(energy);
+
         if (alive) {
-            if (energy > 0) grow();
+            if (energy > 100 && World.rand.nextInt(10) == 0) grow();
+            //if (energy > 500) sendSeed(100);
             
             float dist = (float) Math.sqrt((rootX - x) * (rootX - x) + (rootY - y) * (rootY - y));
             if (connected) {
@@ -43,11 +46,20 @@ public class Plant extends EntityLiving {
     
     @Override
     public void energyTick() {
-        energy -= size;
-        energy += size * 1.01; // sun power
+        energy -= size * 0.25;
+        energy += size * 0.2; // sun power
         if (connected) {
-            energy -= Terrain.changeEnergy(rootX, rootY, -1);
+            energy -= Terrain.changeEnergy(rootX, rootY, (int) (-size * 0.2));
         }
+    }
+    
+    public void sendSeed(int energy) {
+        this.energy -= energy;
+        Vector2f v = new Vector2f(World.rand.nextInt(360));
+        v.scale(rand.nextFloat() * 10);
+        EntitySeed seed = new EntitySeed(rootX, rootY, energy);
+        seed.velocity.set(v);
+        World.add(seed);
     }
     
     @Override
