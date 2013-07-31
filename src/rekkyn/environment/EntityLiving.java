@@ -59,6 +59,13 @@ public class EntityLiving extends Entity {
         return true;
     }
     
+    public boolean shrink() {
+        if (size <= 50) return false;
+        energy++;
+        size--;
+        return true;
+    }
+    
     public void setDead() {
         alive = false;
     }

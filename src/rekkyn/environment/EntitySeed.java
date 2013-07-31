@@ -1,5 +1,8 @@
 package rekkyn.environment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -10,11 +13,19 @@ public class EntitySeed extends EntityLiving {
     
     int lifeTime = 0;
     int seedTime = 60;
+    List traits;
     
-    public EntitySeed(float x, float y, int energy) {
+    public EntitySeed(float x, float y, int energy, List traits) {
         super(x, y);
         this.energy = energy;
         size = 40;
+        this.traits = traits;
+        setTraits(traits);
+    }
+    
+    private void setTraits(List traits) {
+        col = (Color) traits.get(0);
+        seedTime = (Integer) traits.get(3);
     }
     
     @Override
@@ -22,7 +33,7 @@ public class EntitySeed extends EntityLiving {
         super.update(container, game, delta);
         lifeTime++;
         if (lifeTime > seedTime && Math.abs(velocity.length()) < 0.1) {
-            Plant plant = new Plant(x, y, energy);
+            Plant plant = new Plant(x, y, energy, traits);
             World.add(plant);
             remove();
         }

@@ -26,4 +26,13 @@ public class Colour {
         hsb[2] = 0.5F * percent + 0.3F;
         return new Color(java.awt.Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]));
     }
+    
+    public static Color mutateHue(Color col) {
+        float[] hsb = new float[3];
+        java.awt.Color.RGBtoHSB(col.getRed(), col.getGreen(), col.getBlue(), hsb);
+        System.out.println(hsb[0]);
+        hsb[0] += World.rand.nextGaussian() / 45;
+        System.out.println(hsb[0]);
+        return new Color(java.awt.Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]));
+    }
 }

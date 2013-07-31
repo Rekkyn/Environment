@@ -37,7 +37,13 @@ public class World extends BasicGameState {
         
         Entity wall = new Wall(200, 200, 100);
         
-        EntitySeed seed = new EntitySeed(300, 300, 100);
+        List traits = new ArrayList();
+        traits.add(Colour.randColour());
+        traits.add(10F);
+        traits.add(500);
+        traits.add(60);
+
+        EntitySeed seed = new EntitySeed(300, 300, 100, traits);
         seed.velocity.set(5, 0);
         
         add(e);
