@@ -16,6 +16,7 @@ public class World extends BasicGameState {
     
     public static List<Entity> entities = new ArrayList<Entity>();
     float accumulator = 0.0F;
+    private boolean terrainMode = false;
     static float partialTicks;
     public static final float timesetp = 50 / 3; // 1/60 second
     
@@ -39,18 +40,36 @@ public class World extends BasicGameState {
         add(e2);
         add(wall);
         add(seed);
+        
+        Terrain.init();
     }
     
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         g.setAntiAlias(true);
-        g.setColor(new Color(209, 217, 224));
+        
+        g.setColor(new Color(255, 255, 255));
+        
+        if (!terrainMode) {
+            g.setColor(new Color(209, 217, 224));
+        }
         g.fillRect(0, 0, Game.width, Game.height);
+        
+        if (terrainMode) {
+            for (int i = 0; i < Terrain.energy.length; i++) {
+                for (int j = 0; j < Terrain.energy[0].length; j++) {
+                    g.setColor(new Color(0F, 0F, 0F, Terrain.getEnergy(i, j) / 150F));
+                    g.fillRect(i * 20, j * 20, 20, 20);
+                }
+            }
+        }
         
         for (int i = 0; i < entities.size(); i++) {
             Entity e = entities.get(i);
             
-            e.render(container, game, g);
+            if (!terrainMode) {
+                e.render(container, game, g);
+            }
         }
     }
     
@@ -72,7 +91,7 @@ public class World extends BasicGameState {
         
         for (int i = 0; i < entities.size(); i++) {
             Entity e = entities.get(i);
-                        
+            
             for (int j = 0; j < entities.size(); j++) {
                 Entity e2 = entities.get(j);
                 if (e2 != e && e.intersects(e2) && e.isCollidable() && e2.isCollidable()) {
@@ -89,12 +108,18 @@ public class World extends BasicGameState {
             }
         }
         
+        Terrain.update(container, game, delta);
+        
         if (input.isMousePressed(0)) {
             int mouseX = Mouse.getX();
             int mouseY = Game.height - Mouse.getY();
             
             Entity e = new Entity(mouseX, mouseY);
             add(e);
+        }
+        
+        if (input.isKeyPressed(Input.KEY_T)) {
+            terrainMode = !terrainMode;
         }
     }
     
