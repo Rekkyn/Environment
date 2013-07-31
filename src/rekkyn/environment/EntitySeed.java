@@ -10,7 +10,7 @@ public class EntitySeed extends Entity {
     
     public int energy;
     int time = 0;
-    int seedTime = 600;
+    int seedTime = 60;
     
     public EntitySeed(float x, float y, int energy) {
         super(x, y);

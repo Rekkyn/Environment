@@ -39,7 +39,7 @@ public class Entity {
         this.y = y;
         size = 500;
         invMass = 1F / size;
-        col = new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
+        col = Colour.randColour();
         velocity = new Vector2f(0, 0);
         prevVelocity = new Vector2f(0, 0);
         force = new Vector2f(0, 0);
@@ -73,7 +73,6 @@ public class Entity {
         prevX = x;
         prevY = y;
         
-        System.out.println(force.toString());
         velocity.add(force.scale(invMass));
         force.set(0, 0);
         

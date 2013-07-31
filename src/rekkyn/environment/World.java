@@ -43,6 +43,7 @@ public class World extends BasicGameState {
     
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+        g.setAntiAlias(true);
         g.setColor(new Color(209, 217, 224));
         g.fillRect(0, 0, Game.width, Game.height);
         
