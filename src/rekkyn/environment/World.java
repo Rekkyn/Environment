@@ -17,6 +17,7 @@ public class World extends BasicGameState {
     public static List<Entity> entities = new ArrayList<Entity>();
     float accumulator = 0.0F;
     private boolean terrainMode = false;
+    public static long tickCount = 0;
     static float partialTicks;
     public static final float timesetp = 50 / 3; // 1/60 second
     
@@ -86,6 +87,7 @@ public class World extends BasicGameState {
     }
     
     public void tick(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+        tickCount ++;
         
         Input input = container.getInput();
         

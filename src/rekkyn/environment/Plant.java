@@ -14,7 +14,7 @@ public class Plant extends Entity {
     public Plant(float x, float y, int energy) {
         super(x, y);
         this.energy = energy;
-        super.size = 50;
+        super.size = 1000;
         rootX = x;
         rootY = y;
     }
@@ -23,10 +23,23 @@ public class Plant extends Entity {
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         super.update(container, game, delta);
         
+        if (World.tickCount % 12 == 0) {
+        energyTick();
+        }
+        
+        if (energy <= 0) {
+            if (size > 50) {
+                size--;
+                energy++;
+            } else {
+                setDead();
+            }
+        }
+        
         float dist = (float) Math.sqrt((rootX - x) * (rootX - x) + (rootY - y) * (rootY - y));
         if (connected) {
-                force.x += dist * (rootX - x) * 0.1;
-                force.y += dist * (rootY - y) * 0.1;
+                force.x += dist * (rootX - x) * 0.4;
+                force.y += dist * (rootY - y) * 0.4;
             if (Math.abs(velocity.length()) < 0.3 && dist < 1) {
                 x = rootX;
                 y = rootY;
@@ -34,14 +47,22 @@ public class Plant extends Entity {
             if (dist >= 20) {
                 connected = false;
             }
-        }
-        
-        if (!connected) {
+        } else {
             health--;
             if (health < 0) health = 0;
         }
-        
+                
         col = Colour.setColorByHealth(health / 1000F, col);
+    }
+
+    private void energyTick() {
+        energy += size * 0.8; //sun power
+        energy -= size; // cost of living        
+        System.out.println(energy);
+    }
+
+    private void setDead() {
+        connected = false;
     }
     
 }
