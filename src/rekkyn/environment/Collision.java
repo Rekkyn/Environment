@@ -81,4 +81,23 @@ public class Collision {
         A.y -= correctionA.y;
         B.y += correctionB.y;
     }
+    
+    public static void doEdgeCollision(Entity e) {
+        if (e.x1 < 0) {
+            e.x = e.edgeLength / 2;
+            e.velocity.x = -e.velocity.x * 0.4F;
+        }
+        if (e.y1 < 0) {
+            e.y = e.edgeLength / 2;
+            e.velocity.y = -e.velocity.y * 0.4F;
+        }
+        if (e.x2 > Game.width) {
+            e.x = Game.width - e.edgeLength / 2;
+            e.velocity.x = -e.velocity.x * 0.4F;
+        }
+        if (e.y2 > Game.height) {
+            e.y = Game.height - e.edgeLength / 2;
+            e.velocity.y = -e.velocity.y * 0.4F;
+        }
+    }
 }

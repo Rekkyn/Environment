@@ -71,7 +71,7 @@ public class World extends BasicGameState {
         
         for (int i = 0; i < entities.size(); i++) {
             Entity e = entities.get(i);
-            
+                        
             for (int j = 0; j < entities.size(); j++) {
                 Entity e2 = entities.get(j);
                 if (e2 != e && e.intersects(e2) && e.isCollidable() && e2.isCollidable()) {
@@ -80,6 +80,7 @@ public class World extends BasicGameState {
                 }
             }
             
+            Collision.doEdgeCollision(e);
             e.update(container, game, delta);
             
             if (e.removed) {

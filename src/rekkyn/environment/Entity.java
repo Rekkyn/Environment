@@ -19,10 +19,9 @@ public class Entity {
     public float prevY;
     public Vector2f velocity;
     public Vector2f prevVelocity;
+    public Vector2f force;
     public boolean removed;
     Input input;
-    public boolean onEdgeX;
-    public boolean onEdgeY;
     public int size;
     public float invMass;
     float edgeLength;
@@ -43,6 +42,7 @@ public class Entity {
         col = new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
         velocity = new Vector2f(0, 0);
         prevVelocity = new Vector2f(0, 0);
+        force = new Vector2f(0, 0);
     }
     
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
@@ -73,33 +73,15 @@ public class Entity {
         prevX = x;
         prevY = y;
         
+        System.out.println(force.toString());
+        velocity.add(force.scale(invMass));
+        force.set(0, 0);
+        
         x += velocity.x;
         y += velocity.y;
         
-        onEdgeX = false;
-        onEdgeY = false;
-        if (x1 < 0) {
-            x = edgeLength / 2;
-            velocity.x = -velocity.x * 0.4F;
-            onEdgeX = true;
-        }
-        if (y1 < 0) {
-            y = edgeLength / 2;
-            velocity.y = -velocity.y * 0.4F;
-            onEdgeY = true;
-        }
-        if (x2 > Game.width) {
-            x = Game.width - edgeLength / 2;
-            velocity.x = -velocity.x * 0.4F;
-            onEdgeX = true;
-        }
-        if (y2 > Game.height) {
-            y = Game.height - edgeLength / 2;
-            velocity.y = -velocity.y * 0.4F;
-            onEdgeY = true;
-        }
                 
-        float speed = 0.2F;
+        float speed = 100F;
         
         if (playerControlled) {
             Vector2f inputV = new Vector2f();
@@ -121,12 +103,12 @@ public class Entity {
             inputV.normalise();
             inputV.scale(speed);
             
-            velocity.add(inputV);
+            force.add(inputV);
         }
         
-        velocity.scale(0.95F);
+        velocity.scale(0.95F);        
     }
-    
+        
     public void readFromOptions() {}
     
     public void writeToOptions() {}
