@@ -10,15 +10,17 @@ import org.newdawn.slick.state.StateBasedGame;
 public class Terrain {
     static int[][] energy = new int[Game.width / 20][Game.height / 20];
     
-    public static int differenceLevel = 20;
+    public static int differenceLevel = 2000;
     public static int random = 10;
+    public static int energyFlow = 100;
+    public static int starting = 10000;
     
     static Random rand = new Random();
     
     public static void init() {
         for (int i = 0; i < energy.length; i++) {
             for (int j = 0; j < energy[0].length; j++) {
-                energy[i][j] = 100;
+                energy[i][j] = starting;
             }
         }
     }
@@ -28,6 +30,10 @@ public class Terrain {
     }
     
     public static int changeEnergy(float x, float y, int amount) {
+        if (x < 0) x = 0;
+        if (x > Game.width - 1) x = Game.width - 1;
+        if (y < 0) y = 0;
+        if (y > Game.height - 1) y = Game.height - 1;
         energy[(int) (x / 20)][(int) (y / 20)] += amount;
         if (energy[(int) (x / 20)][(int) (y / 20)] < 0) {
             amount -= energy[(int) (x / 20)][(int) (y / 20)];
@@ -51,35 +57,38 @@ public class Terrain {
         
         for (int i = 0; i < energy.length; i++) {
             for (int j = 0; j < energy[0].length; j++) {
+                if (energy[i][j] < starting) {
+                    energy[i][j] ++;
+                }
                 if (j > 0) {
                     if (energy[i][j - 1] + differenceLevel < energy[i][j]) {
                         if (rand.nextInt(random) == 0) {
-                            energy[i][j - 1]++;
-                            energy[i][j]--;
+                            energy[i][j - 1] += energyFlow;
+                            energy[i][j] -= energyFlow;
                         }
                     }
                 }
                 if (j < energy[0].length - 1) {
                     if (energy[i][j + 1] + differenceLevel < energy[i][j]) {
                         if (rand.nextInt(random) == 0) {
-                            energy[i][j + 1]++;
-                            energy[i][j]--;
+                            energy[i][j + 1] += energyFlow;
+                            energy[i][j] -= energyFlow;
                         }
                     }
                 }
                 if (i > 0) {
                     if (energy[i - 1][j] + differenceLevel < energy[i][j]) {
                         if (rand.nextInt(random) == 0) {
-                            energy[i - 1][j]++;
-                            energy[i][j]--;
+                            energy[i - 1][j] += energyFlow;
+                            energy[i][j] -= energyFlow;
                         }
                     }
                 }
                 if (i < energy.length - 1) {
                     if (energy[i + 1][j] + differenceLevel < energy[i][j]) {
                         if (rand.nextInt(random) == 0) {
-                            energy[i + 1][j]++;
-                            energy[i][j]--;
+                            energy[i + 1][j] += energyFlow;
+                            energy[i][j] -= energyFlow;
                         }
                     }
                 }

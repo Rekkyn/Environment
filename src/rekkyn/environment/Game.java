@@ -11,8 +11,8 @@ public class Game extends StateBasedGame {
     public static final String NAME = "Environment";
     public static final int MENU = 0;
     public static final int WORLD = 1;
-    public static int width = 800;
-    public static int height = 600;
+    public static int width = 20 * 60;
+    public static int height = 20 * 40;
 
     public Game(String name) {
         super(name);

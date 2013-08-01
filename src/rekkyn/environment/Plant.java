@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
@@ -26,6 +27,7 @@ public class Plant extends EntityLiving {
         rootY = y;
         this.traits = traits;
         setTraits(traits);
+        System.out.println(traits);
     }
     
     private void setTraits(List traits) {
@@ -34,19 +36,17 @@ public class Plant extends EntityLiving {
         seedEnergy = (Integer) traits.get(2);
         seedTime = (Integer) traits.get(3);
     }
-
+    
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         super.update(container, game, delta);
-        
-        System.out.println(energy);
-        
+                        
         if (alive) {
             
             // run AI
-            if (energy > 150) grow();
-            if (energy < 100 && size > 200) shrink();
-            if (energy > seedEnergy * 2) sendSeed();
+            if (energy > 1000 && size < 500) grow();
+            if (energy < 500 && size > 200) shrink();
+            if (energy > seedEnergy * 2 + 50 * seedSpeed * seedSpeed / 2) sendSeed();
             
             float dist = (float) Math.sqrt((rootX - x) * (rootX - x) + (rootY - y) * (rootY - y));
             if (connected) {
@@ -66,17 +66,27 @@ public class Plant extends EntityLiving {
     }
     
     @Override
-    public void energyTick() {
-        energy -= size * 0.25;
-        energy += size * 0.3; // sun power
+    public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+        g.setColor(Color.green);
         if (connected) {
-            energy -= Terrain.changeEnergy(rootX, rootY, (int) (-size * 0.2));
+            g.drawLine(rootX, rootY, x, y);
+        }
+        super.render(container, game, g);
+    }
+    
+    @Override
+    public void energyTick() {
+        energy -= size * 1.0;
+        energy += size * 0.15; // sun power
+        if (connected) {
+            energy -= Terrain.changeEnergy(rootX, rootY, (int) (-size * 0.9));
         }
     }
     
     public void sendSeed() {
         if (energy < seedEnergy) return;
         energy -= seedEnergy;
+        energy -= 50 * seedSpeed * seedSpeed / 2;
         Vector2f v = new Vector2f(World.rand.nextInt(360));
         v.scale(seedSpeed);
         EntitySeed seed = Mutator.mutateNewSeed(this);

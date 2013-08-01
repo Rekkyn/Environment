@@ -51,7 +51,7 @@ public class Entity {
         g.translate(World.partialTicks * (x - prevX), World.partialTicks * (y - prevY));
         g.fillRect(x - edgeLength / 2, y - edgeLength / 2, edgeLength, edgeLength);
         g.setColor(Color.black);
-        g.drawLine(x, y, x + velocity.x * 10, y + velocity.y * 10);
+        //g.drawLine(x, y, x + velocity.x * 10, y + velocity.y * 10);
         g.popTransform();
     }
     

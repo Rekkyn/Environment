@@ -54,7 +54,7 @@ public class EntityLiving extends Entity {
     
     public boolean grow() {
         if (energy <= 0) return false;
-        energy--;
+        energy -= 0.0001 * (size - 50) * (size - 50) + 1;
         size++;
         return true;
     }

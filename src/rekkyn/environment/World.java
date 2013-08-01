@@ -30,25 +30,15 @@ public class World extends BasicGameState {
     
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
-        Entity e = new Entity(100, 100);
-        e.playerControlled = true;
-        
-        Entity e2 = new Entity(100, 150);
-        
-        Entity wall = new Wall(200, 200, 100);
         
         List traits = new ArrayList();
         traits.add(Colour.randColour());
         traits.add(10F);
-        traits.add(500);
-        traits.add(60);
+        traits.add(1000);
+        traits.add(300);
 
-        EntitySeed seed = new EntitySeed(300, 300, 100, traits);
-        seed.velocity.set(5, 0);
+        EntitySeed seed = new EntitySeed(Game.width / 2, Game.height / 2, 1000, traits, null);
         
-        add(e);
-        add(e2);
-        add(wall);
         add(seed);
         
         Terrain.init();
@@ -68,7 +58,7 @@ public class World extends BasicGameState {
         if (terrainMode) {
             for (int i = 0; i < Terrain.energy.length; i++) {
                 for (int j = 0; j < Terrain.energy[0].length; j++) {
-                    g.setColor(new Color(0F, 0F, 0F, Terrain.getEnergy(i, j) / 200F));
+                    g.setColor(new Color(0F, 0F, 0F, Terrain.getEnergy(i, j) / 20000F));
                     g.fillRect(i * 20, j * 20, 20, 20);
                 }
             }
