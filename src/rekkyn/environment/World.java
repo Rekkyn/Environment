@@ -31,15 +31,19 @@ public class World extends BasicGameState {
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
         
-        List traits = new ArrayList();
-        traits.add(Colour.randColour());
-        traits.add(10F);
-        traits.add(1000);
-        traits.add(300);
-
-        EntitySeed seed = new EntitySeed(Game.width / 2, Game.height / 2, 1000, traits, null);
-        
-        add(seed);
+        for (int lmnop = 0; lmnop < 50; lmnop++) {
+            
+            List traits = new ArrayList();
+            traits.add(Colour.randColour());
+            traits.add(rand.nextFloat() * 20F);
+            traits.add((int) (rand.nextFloat() * 2000));
+            traits.add((int) (rand.nextFloat() * 600));
+            traits.add((int) (rand.nextFloat() * 10000));
+            
+            EntitySeed seed = new EntitySeed(Game.width * rand.nextFloat(), Game.height * rand.nextFloat(), 1000, traits, null);
+            
+            add(seed);
+        }
         
         Terrain.init();
     }
@@ -58,7 +62,7 @@ public class World extends BasicGameState {
         if (terrainMode) {
             for (int i = 0; i < Terrain.energy.length; i++) {
                 for (int j = 0; j < Terrain.energy[0].length; j++) {
-                    g.setColor(new Color(0F, 0F, 0F, Terrain.getEnergy(i, j) / 20000F));
+                    g.setColor(new Color(0F, 0F, 0F, Terrain.getEnergy(i, j) / (Terrain.starting * 2F)));
                     g.fillRect(i * 20, j * 20, 20, 20);
                 }
             }
@@ -75,18 +79,18 @@ public class World extends BasicGameState {
     
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-        accumulator += delta;
+        // accumulator += delta;
         
-        while (accumulator >= timesetp) {
-            tick(container, game, delta);
-            accumulator -= timesetp;
-        }
+        // while (accumulator >= timesetp) {
+        tick(container, game, delta);
+        // accumulator -= timesetp;
+        // }
         
-        partialTicks = accumulator / timesetp;
+        // partialTicks = accumulator / timesetp;
     }
     
     public void tick(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-        tickCount ++;
+        tickCount++;
         
         Input input = container.getInput();
         

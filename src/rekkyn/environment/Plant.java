@@ -16,7 +16,8 @@ public class Plant extends EntityLiving {
     
     public float seedSpeed;
     public int seedEnergy;
-    public int seedTime = 60;
+    public int seedTime;
+    public int maxSize;
     private List traits;
     
     public Plant(float x, float y, int energy, List traits) {
@@ -27,7 +28,6 @@ public class Plant extends EntityLiving {
         rootY = y;
         this.traits = traits;
         setTraits(traits);
-        System.out.println(traits);
     }
     
     private void setTraits(List traits) {
@@ -35,16 +35,17 @@ public class Plant extends EntityLiving {
         seedSpeed = (Float) traits.get(1);
         seedEnergy = (Integer) traits.get(2);
         seedTime = (Integer) traits.get(3);
+        maxSize = (Integer) traits.get(4);
     }
     
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         super.update(container, game, delta);
-                        
+        
         if (alive) {
             
             // run AI
-            if (energy > 1000 && size < 500) grow();
+            if (energy > 1000 && size < maxSize) grow();
             if (energy < 500 && size > 200) shrink();
             if (energy > seedEnergy * 2 + 50 * seedSpeed * seedSpeed / 2) sendSeed();
             
