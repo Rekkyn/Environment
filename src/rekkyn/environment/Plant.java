@@ -9,6 +9,12 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
+import rekkyn.environment.Gene.Actions;
+import rekkyn.environment.Gene.Condition;
+import rekkyn.environment.Gene.Operators;
+import rekkyn.environment.Gene.Output;
+import rekkyn.environment.Gene.Stats;
+
 public class Plant extends EntityLiving {
     
     public float rootX, rootY;
@@ -44,10 +50,14 @@ public class Plant extends EntityLiving {
         
         if (alive) {
             
+            Gene gene = new Gene();
+            gene.setGene(gene.new Condition(Stats.ENERGY, Operators.GREATERTHAN, 100), gene.new Output(Actions.GROW), this);
+            gene.execute();
+            
             // run AI
-            if (energy > 0.0001 * (size - 50) * (size - 50) + 1000 && size < maxSize) grow();
+           /* if (energy > 0.0001 * (size - 50) * (size - 50) + 1000 && size < maxSize) grow();
             if (energy < 500 && size > 200) shrink();
-            if (energy > seedEnergy * 2 + 50 * seedSpeed * seedSpeed / 2) sendSeed();
+            if (energy > seedEnergy * 2 + 50 * seedSpeed * seedSpeed / 2) sendSeed();*/
             
             float dist = (float) Math.sqrt((rootX - x) * (rootX - x) + (rootY - y) * (rootY - y));
             if (connected) {
@@ -84,8 +94,8 @@ public class Plant extends EntityLiving {
         }
     }
     
-    public void sendSeed() {
-        if (energy < seedEnergy) return;
+    public boolean sendSeed() {
+        if (energy < seedEnergy) return false;
         energy -= seedEnergy;
         energy -= 50 * seedSpeed * seedSpeed / 2;
         Vector2f v = new Vector2f(World.rand.nextInt(360));
@@ -93,6 +103,7 @@ public class Plant extends EntityLiving {
         EntitySeed seed = Mutator.mutateNewSeed(this);
         seed.velocity.set(v);
         World.add(seed);
+        return true;
     }
     
     @Override
