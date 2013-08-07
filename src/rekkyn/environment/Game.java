@@ -11,8 +11,8 @@ public class Game extends StateBasedGame {
     public static final String NAME = "Environment";
     public static final int MENU = 0;
     public static final int WORLD = 1;
-    public static int width = 20 * 60;
-    public static int height = 20 * 40;
+    public static int width = 20 * 72;
+    public static int height = 20 * 45;
 
     public Game(String name) {
         super(name);
@@ -21,7 +21,7 @@ public class Game extends StateBasedGame {
     public static void main(String[] args) {
         try {
             appgc = new AppGameContainer(new Game(NAME));
-            appgc.setDisplayMode(width, height, false);
+            appgc.setDisplayMode(width, height, true);
             appgc.start();
         } catch (SlickException e) {
             e.printStackTrace();

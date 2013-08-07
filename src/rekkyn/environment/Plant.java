@@ -45,7 +45,7 @@ public class Plant extends EntityLiving {
         if (alive) {
             
             // run AI
-            if (energy > 1000 && size < maxSize) grow();
+            if (energy > 0.0001 * (size - 50) * (size - 50) + 1000 && size < maxSize) grow();
             if (energy < 500 && size > 200) shrink();
             if (energy > seedEnergy * 2 + 50 * seedSpeed * seedSpeed / 2) sendSeed();
             

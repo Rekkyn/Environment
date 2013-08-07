@@ -40,7 +40,7 @@ public class EntityLiving extends Entity {
             } else {
                 col = Colour.setColorByHealth(0, col);
             }
-            if (size > 50) {
+            if (size > 10) {
                 if (World.rand.nextInt(10) == 0) {
                 size -= Terrain.changeEnergy(x, y, 1);
                 }
